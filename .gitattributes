@@ -6,3 +6,4 @@
 *.md            text
 *.json          text
 *.wrl           text
+*.png           binary
