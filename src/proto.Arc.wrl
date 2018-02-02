@@ -1,0 +1,70 @@
+#VRML V2.0 utf8
+
+PROTO Arc [
+	exposedField  SFFloat  fromAngle    0
+	exposedField  SFFloat  toAngle      6.28318
+	exposedField  SFFloat  radius       1
+	exposedField  SFFloat  tesselation  16
+	field         SFBool   solid        FALSE
+]{
+	DEF geometry IndexedFaceSet {
+		solid IS solid
+		coord DEF coords Coordinate {}
+	}
+
+	Script {
+		field         SFNode   geometry     USE geometry
+		field         SFNode   coords       USE coords
+
+		exposedField  SFFloat  fromAngle    IS fromAngle
+		exposedField  SFFloat  toAngle      IS toAngle
+		exposedField  SFFloat  radius       IS radius
+		exposedField  SFFloat  tesselation  IS tesselation
+
+		directOutput TRUE
+		url "javascript:
+
+		function refresh(){
+			var positions = new MFVec3f();
+			var coordIndex = new MFInt32();
+			if (tesselation > 1){
+				var minValue = fromAngle;
+				var maxValue = toAngle;
+				var delta = maxValue - minValue;
+				if (delta != 0){
+					var angle = minValue;
+					var angleBetween = delta / tesselation;
+					for (var i = 0; i < tesselation + 1; i++){
+						positions[i] = new SFVec3f(-radius * Math.sin(angle), radius * Math.cos(angle), 0);
+						angle += angleBetween;
+					}
+					positions[tesselation + 1] = new SFVec3f(0, 0, 0);
+
+					var j = 0;
+					for (var i = 1; i < tesselation + 1; i++){
+						coordIndex[j] = tesselation + 1;
+						coordIndex[j + 1] = i - 1;
+						coordIndex[j + 2] = i;
+						coordIndex[j + 3] = -1;
+						j += 4;
+					}
+				}
+			}
+			coords.point = positions;
+			geometry.coordIndex = coordIndex;
+		}
+
+		function fromAngle(){}
+		function toAngle(){}
+		function radius(){}
+		function tesselation(){}
+		function initialize(){
+			refresh();
+		}
+		function eventsProcessed(){
+			refresh();
+		}
+
+		"
+	}
+}
