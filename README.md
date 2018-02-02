@@ -1,6 +1,7 @@
 # Arc
 
-VRML PROTO (based on `IndexedFaceSet`) that generates part of a flat circle (e.g. for **pie charts**).
+VRML PROTO (based on `IndexedFaceSet`) that generates part of a flat circle (e.g. for **pie charts**),
+similar to [PROTO ArcLine](https://github.com/wildpeaks/proto-arcline).
 
 	EXTERNPROTO Arc [
 		exposedField  SFFloat  fromAngle
